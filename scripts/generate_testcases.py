@@ -326,9 +326,9 @@ def generate_testcases():
             )
             module_summary.to_excel(writer, sheet_name='Module Summary', index=False)
 
-        print(f"✓ Generated {file_path} — 300 test cases, 6 sheets")
+        print(f"[OK] Generated {file_path} -- 300 test cases, 6 sheets")
 
-    print(f"\n✅ All 6 reports generated successfully (1800 total test cases)")
+    print(f"\n[DONE] All 6 reports generated successfully (1800 total test cases)")
 
 
 if __name__ == '__main__':
