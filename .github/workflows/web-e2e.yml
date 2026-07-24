@@ -1,0 +1,40 @@
+name: Web E2E Selenium Tests
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        working-directory: web-automation
+        run: npm install
+
+      - name: Run WebdriverIO Tests
+        working-directory: web-automation
+        run: npm test
+        env:
+          BASE_URL: ${{ secrets.BASE_URL || 'http://localhost:5000' }}
+
+      - name: Generate Allure Report
+        if: always()
+        working-directory: web-automation
+        run: npm run report || echo "Skipping local open"
+
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: web-e2e-report
+          path: web-automation/allure-results

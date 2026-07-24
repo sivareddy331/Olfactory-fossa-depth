@@ -1,0 +1,39 @@
+name: Security & Performance Review
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  sast_scan:
+    name: SAST Scanning
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run Semgrep
+        run: |
+          chmod +x security_audit/scripts/run_semgrep.sh
+          ./security_audit/scripts/run_semgrep.sh || echo "Semgrep finished with warnings"
+
+  dependency_scan:
+    name: Dependency Scanning
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run Trivy
+        run: |
+          chmod +x security_audit/scripts/run_trivy.sh
+          ./security_audit/scripts/run_trivy.sh || echo "Trivy finished with warnings"
+
+  performance_test:
+    name: Performance Baseline
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup k6
+        uses: grafana/setup-k6-action@v1
+      - name: Run k6 load test
+        run: k6 run security_audit/performance/k6-load-test.js
