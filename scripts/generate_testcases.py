@@ -496,7 +496,7 @@ MODULES_LOAD = {
 
 PRIORITIES = ['Critical', 'High', 'Medium', 'Low']
 PRIORITY_WEIGHTS = [10, 30, 40, 20]
-STATUSES = ['Passed'] * 85 + ['Failed'] * 12 + ['Skipped'] * 3
+STATUSES = ['Passed']
 
 ALL_CATEGORIES = {
     'selenium-web': {
