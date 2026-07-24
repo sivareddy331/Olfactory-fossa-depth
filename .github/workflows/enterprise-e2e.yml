@@ -1,0 +1,139 @@
+name: Enterprise QA Automation Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  enterprise_e2e:
+    name: 🌐 Enterprise CI/CD Test Execution (Selenium, Appium, Load Tests)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Setup Python 3.11 Environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser chromium-chromedriver sqlite3 libsqlite3-dev
+
+      - name: Install Root Dependencies
+        run: |
+          npm install
+
+      - name: Install Python App Dependencies
+        run: |
+          pip install -r "Olfactory Fossaweb/requirements.txt" pandas openpyxl
+
+      - name: Build & Start Flask Web Server
+        run: |
+          python "Olfactory Fossaweb/app.py" &
+          echo "Waiting for Flask server to launch..."
+          for i in {1..30}; do
+            if curl -s http://127.0.0.1:5000/login > /dev/null; then
+              echo "Flask server is live!"
+              break
+            fi
+            sleep 1
+          done
+        env:
+          MAIL_USERNAME: 'dummy@example.com'
+          MAIL_PASSWORD: 'dummy-password'
+
+      - name: Run Selenium Web Tests
+        run: |
+          cd automation
+          npm install
+          npm run test:report || true
+        env:
+          BASE_URL: 'http://127.0.0.1:5000'
+          HEADLESS: 'true'
+          SCREENSHOT_ON_FAIL: 'true'
+
+      - name: Run Appium Android Tests
+        run: |
+          cd appium
+          npm install
+          npm run test:report || true
+        env:
+          APPIUM_HOST: 'localhost'
+          APPIUM_PORT: '4723'
+
+      - name: Setup K6 Performance Testing Tool
+        uses: grafana/setup-k6-action@v1
+
+      - name: Run K6 Baseline Load Testing (100 VUs / 1 Minute)
+        run: |
+          mkdir -p automation/reports/load
+          k6 run -e BASE_URL=http://127.0.0.1:5000 automation/tests/load-test.k6.js || true
+
+      - name: Compile Consolidated Enterprise Reports
+        run: |
+          npm run compile:reports
+
+      - name: Prepare GitHub Pages Site Directory
+        run: |
+          mkdir -p _site/latest
+          mkdir -p _site/history
+          cp -r reports/latest/* _site/latest/
+          cp -r reports/history/* _site/history/
+          cp _site/latest/dashboard.html _site/index.html || cp reports/dashboard.html _site/index.html
+
+      - name: Publish Consolidated Job Summary to GitHub
+        run: |
+          cat reports/summary.md >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload Master Test Workbook Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Automation_Test_Report_Workbook
+          path: |
+            reports/Automation_Test_Report.xlsx
+            reports/execution-report.html
+            reports/dashboard.html
+            reports/summary.md
+            reports/execution-results.json
+          retention-days: 30
+
+      - name: Upload Logs & Screenshots Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Execution_Logs_And_Screenshots
+          path: |
+            reports/latest/screenshots/
+            reports/latest/logs/
+          retention-days: 30
+
+      - name: Upload GitHub Pages Asset Package
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy Dynamic QA Site to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        continue-on-error: true

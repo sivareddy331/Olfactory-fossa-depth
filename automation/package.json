@@ -1,0 +1,27 @@
+{
+  "name": "olfactory-web-automation",
+  "version": "1.0.0",
+  "description": "Enterprise Selenium Automation Framework for Olfactory FossaWeb Application",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha 'tests/**/*.test.js' --timeout 60000 --reporter spec",
+    "test:report": "mocha 'tests/**/*.test.js' --timeout 60000 --reporter mochawesome --reporter-options reportDir=reports/html,reportFilename=execution-report",
+    "test:parallel": "mocha 'tests/**/*.test.js' --timeout 60000 --parallel",
+    "generate": "node utils/generate-testcases.js",
+    "report": "node utils/report-generator.js"
+  },
+  "dependencies": {
+    "selenium-webdriver": "^4.18.1",
+    "mocha": "^10.3.0",
+    "chai": "^4.4.1",
+    "mochawesome": "^7.1.3",
+    "mochawesome-merge": "^4.3.0",
+    "mochawesome-report-generator": "^6.2.0",
+    "exceljs": "^4.4.0",
+    "winston": "^3.12.0",
+    "dotenv": "^16.4.5",
+    "chromedriver": "^123.0.0",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {}
+}

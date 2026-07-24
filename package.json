@@ -1,0 +1,15 @@
+{
+  "name": "olfactory-enterprise-qa",
+  "version": "1.0.0",
+  "description": "Enterprise QA Automation Suite containing Selenium, Appium, and Load Testing",
+  "scripts": {
+    "install:all": "npm install && cd automation && npm install && cd ../appium && npm install",
+    "test:web": "cd automation && npm run test:report",
+    "test:mobile": "cd appium && npm run test:report",
+    "compile:reports": "node scripts/compile_reports.js"
+  },
+  "dependencies": {
+    "exceljs": "^4.4.0",
+    "fs-extra": "^11.2.0"
+  }
+}
