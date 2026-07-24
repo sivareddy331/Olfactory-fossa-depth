@@ -216,7 +216,7 @@ jobs:
       - name: Generate Job Summary
         run: |
           cat << 'EOF' >> $GITHUB_STEP_SUMMARY
-          # 🚀 Telemedicine Portal - Master 1,800 Test Cases Pipeline Summary
+          # 🚀 Olfactory Fossa Depth - Master 1,800 Test Cases Pipeline Summary
           
           ## 📦 Published Artifact Workbooks
           

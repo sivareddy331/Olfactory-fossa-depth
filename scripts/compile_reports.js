@@ -368,7 +368,7 @@ function generateDashboardHTML(web, appium, load) {
   </table>
 </div>
 <div class="footer">
-  Olfactory Telemedicine Enterprise QA Automation Systems | 30 Days Retention Limit
+  Olfactory Fossa Depth Enterprise QA Automation Systems | 30 Days Retention Limit
 </div>
 </body>
 </html>`;

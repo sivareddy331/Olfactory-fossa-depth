@@ -16,20 +16,20 @@ CATEGORIES = [
     {
         'id': 'selenium-web',
         'file_name': 'selenium-web-report.xlsx',
-        'sheet_name': 'Selenium Web 300',
+        'sheet_name': 'Selenium Web',
         'prefix': 'WEB-TC-',
         'header_color': '31869B',
         'title': 'Selenium Web Tests (300)',
         'modules': ['Auth', 'Patient-Dashboard', 'Doctor-Portal', 'ASHA-Worker', 'Pharmacy', 'Admin-Security', 'UI-Theme', 'Navigation', 'Profile', 'Notifications'],
         'test_name_prefix': 'Web {module} Verification Case',
         'description': 'Execute end-to-end web browser validation for {module}',
-        'steps': '1. Open Telemedicine SPA\n2. Navigate to {module}\n3. Perform workflow actions\n4. Verify UI state',
+        'steps': '1. Open Olfactory Fossa Depth Portal\n2. Navigate to {module}\n3. Perform workflow actions\n4. Verify UI state',
         'expected': 'System updates state cleanly, displays validation messages, and persists {module} data'
     },
     {
         'id': 'appium-android',
         'file_name': 'appium-android-report.xlsx',
-        'sheet_name': 'Appium Android 300',
+        'sheet_name': 'Appium Android',
         'prefix': 'MOB-TC-',
         'header_color': '4F81BD',
         'title': 'Appium Android Tests (300)',
@@ -42,7 +42,7 @@ CATEGORIES = [
     {
         'id': 'unit-test',
         'file_name': 'unit-test-report.xlsx',
-        'sheet_name': 'API Unit Tests 300',
+        'sheet_name': 'API Unit',
         'prefix': 'UNIT-TC-',
         'header_color': '595959',
         'title': 'Unit Tests - API (300)',
@@ -55,7 +55,7 @@ CATEGORIES = [
     {
         'id': 'validation-test',
         'file_name': 'validation-test-report.xlsx',
-        'sheet_name': 'Validation Tests 300',
+        'sheet_name': 'Validation Tests',
         'prefix': 'VAL-TC-',
         'header_color': 'C0504D',
         'title': 'Validation Tests (300)',
@@ -68,7 +68,7 @@ CATEGORIES = [
     {
         'id': 'deployment-test',
         'file_name': 'deployment-test-report.xlsx',
-        'sheet_name': 'Deployment Checks 300',
+        'sheet_name': 'Deployment Status',
         'prefix': 'DEP-TC-',
         'header_color': 'E26B0A',
         'title': 'Deployment Status (300)',
@@ -81,7 +81,7 @@ CATEGORIES = [
     {
         'id': 'load-test',
         'file_name': 'load-test-report.xlsx',
-        'sheet_name': 'Load Performance 300',
+        'sheet_name': 'Load Testing',
         'prefix': 'LOAD-TC-',
         'header_color': '8064A2',
         'title': 'Load Testing (300)',
@@ -213,7 +213,7 @@ def generate_testcases():
         worksheet = writer.sheets['Executive Summary']
         
         # Add Title in A1
-        worksheet['A1'] = 'Telemedicine Portal - Master 1,800 Test Cases Execution Report'
+        worksheet['A1'] = 'Olfactory Fossa Depth - Master 1,800 Test Cases Execution Report'
         worksheet['A1'].font = Font(color="002060", bold=True, size=14)
         worksheet.merge_cells('A1:F1')
         
