@@ -1,0 +1,1 @@
+"C:\Users\sivar\AppData\Local\Microsoft\WindowsApps\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\python.exe" "C:\sb-venv\Scripts\uvicorn.exe" main:app --host 10.185.242.155 --port 8000 --reload

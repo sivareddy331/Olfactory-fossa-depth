@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#1F2937</color> <!-- Map black to dark text color for seamless typography replacement -->
+    <color name="white">#FFFFFF</color>
+
+    <!-- Modern Healthcare Light Theme Palette -->
+    <color name="cyber_dark_bg">#F8FAFC</color> <!-- slate 50 -->
+    <color name="cyber_card_bg">#FFFFFF</color>
+    <color name="cyber_blue_accent">#2D9CDB</color> <!-- Medical Blue -->
+    <color name="cyber_blue_glow">#14B8A6</color> <!-- Teal Accent -->
+    <color name="cyber_text_primary">#1F2937</color> <!-- Slate 800 -->
+    <color name="cyber_text_secondary">#6B7280</color> <!-- Gray 500 -->
+    <color name="cyber_border">#E2E8F0</color> <!-- Slate 200 -->
+    <color name="cyber_glass_effect">#0C2D9CDB</color> <!-- 5% Medical Blue for subtle highlights -->
+
+    <!-- Premium Palette Mapping -->
+    <color name="primaryColor">@color/cyber_blue_accent</color>
+    <color name="primaryLightColor">@color/cyber_blue_glow</color>
+    <color name="primaryDarkColor">#E2E8F0</color> <!-- Used for light grey layout borders and backgrounds -->
+    <color name="accentColor">@color/cyber_blue_accent</color>
+    <color name="secondaryColor">@color/cyber_card_bg</color>
+
+    <color name="background_page">@color/cyber_dark_bg</color>
+    <color name="card_background">@color/cyber_card_bg</color>
+    <color name="text_primary">@color/cyber_text_primary</color>
+    <color name="text_secondary">@color/cyber_text_secondary</color>
+
+    <!-- UI Elements -->
+    <color name="search_bg">#F1F5F9</color> <!-- slate 100 -->
+    <color name="border_color">@color/cyber_border</color>
+    
+    <color name="glass_white">#FFFFFF</color>
+    <color name="glass_grey">#F1F5F9</color>
+
+    <!-- Gradient Colors -->
+    <color name="background_gradient_start">#FFFFFF</color>
+    <color name="background_gradient_end">#F8FAFC</color>
+    
+    <!-- Risk Status Colors - Matching medical/healthcare standard alerts -->
+    <color name="risk_low">#22C55E</color> <!-- Success Green -->
+    <color name="risk_moderate">#F59E0B</color> <!-- Warning Amber -->
+    <color name="risk_high">#EF4444</color> <!-- Danger Red -->
+    
+    <color name="risk_low_bg">#1a22C55E</color>
+    <color name="risk_moderate_bg">#1aF59E0B</color>
+    <color name="risk_high_bg">#1aEF4444</color>
+</resources>

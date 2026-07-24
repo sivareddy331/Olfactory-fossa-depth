@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Verify Code | Olfactory Fossa Depth AI{% endblock %}
+
+{% block auth_content %}
+<div class="auth-card">
+    <div class="auth-header">
+        <h4 class="mb-1"><i class="bi bi-shield-lock-fill me-2"></i>FossaWeb AI</h4>
+        <span class="small text-white-50">Olfactory Depth & Surgical Risk Assessment</span>
+    </div>
+    <div class="card-body p-4">
+        <!-- Flash Messages for Auth -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show small" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Verify Code Form -->
+        <h5 class="card-title text-primary mb-3">Verify Code</h5>
+        <p class="text-secondary small">We have sent a 6-digit validation code to <strong>{{ email }}</strong>. Please enter it below.</p>
+        
+        {% if display_code %}
+        <div class="alert alert-warning text-center mb-4 p-3" style="border-radius:12px; border: 2px solid #f0ad4e;">
+            <div class="small text-muted mb-1"><i class="bi bi-envelope-x me-1"></i>Email delivery unavailable on this network.</div>
+            <div class="small text-muted mb-2">Your verification code is:</div>
+            <div style="font-size: 2.2rem; font-weight: 800; letter-spacing: 0.4em; color: #1a1a2e; font-family: monospace;">{{ display_code }}</div>
+            <div class="small text-muted mt-1">Enter this code below ↓</div>
+        </div>
+        {% endif %}
+        
+        <form action="{{ url_for('auth.verify_code') }}" method="POST">
+            <div class="mb-4 text-center">
+                <label for="code" class="form-label small visually-hidden">Validation Code</label>
+                <input type="text" class="form-control text-center form-control-lg fs-2 tracking-wide font-monospace" 
+                       id="code" name="code" required placeholder="------" 
+                       maxlength="6" pattern="\d{6}" title="Please enter the 6-digit code">
+            </div>
+            
+            <div class="d-grid mb-3">
+                <button type="submit" class="btn btn-primary">Verify Code</button>
+            </div>
+            
+            <div class="text-center mt-3">
+                <span class="small text-secondary">Didn't receive the code? </span>
+                <a href="{{ url_for('auth.forgot_password') }}" class="small text-decoration-none">Resend</a>
+            </div>
+            <div class="text-center mt-2">
+                <a href="{{ url_for('auth.login') }}" class="small text-decoration-none text-muted">Back to Login</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .tracking-wide {
+        letter-spacing: 0.5em;
+    }
+</style>
+{% endblock %}

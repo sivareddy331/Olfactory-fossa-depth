@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}Scan Report | Olfactory Fossa Depth AI{% endblock %}
+{% block header_title %}Diagnostic Scan Report{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card card-custom">
+            <div class="card-header card-header-custom d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-info-circle me-2"></i>Patient Information</span>
+                <a href="{{ url_for('patient.view_patient', id=patient.id) }}" class="btn btn-sm btn-outline-primary"><i class="bi bi-person me-1"></i>View Profile</a>
+            </div>
+            <div class="card-body">
+                <div class="row text-center text-md-start">
+                    <div class="col-md-3 mb-2 mb-md-0">
+                        <span class="text-secondary small d-block">Patient Name</span>
+                        <strong>{{ patient.name }}</strong>
+                    </div>
+                    <div class="col-md-3 mb-2 mb-md-0">
+                        <span class="text-secondary small d-block">Patient ID</span>
+                        <code>{{ patient.patient_uuid }}</code>
+                    </div>
+                    <div class="col-md-3 mb-2 mb-md-0">
+                        <span class="text-secondary small d-block">Age / Gender</span>
+                        <strong>{{ patient.age }} Years / {{ patient.gender }}</strong>
+                    </div>
+                    <div class="col-md-3">
+                        <span class="text-secondary small d-block">Analysis Timestamp</span>
+                        <strong>{{ analysis.date_created.strftime("%Y-%m-%d %H:%M:%S") }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Visual Scan Outputs -->
+    <div class="col-lg-7 mb-4">
+        <div class="card card-custom">
+            <div class="card-header card-header-custom">
+                <i class="bi bi-eye me-2"></i>Scan Imagery comparison
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3 mb-md-0 text-center">
+                        <h6 class="text-secondary mb-2">Original CT Scan</h6>
+                        <img src="{{ url_for('static', filename=orig_relative) }}" alt="Original Image" class="img-fluid border rounded shadow-sm" style="max-height: 300px;">
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <h6 class="text-secondary mb-2">AI-Annotated Measurements</h6>
+                        <img src="{{ url_for('static', filename=proc_relative) }}" alt="Processed Image" class="img-fluid border rounded shadow-sm" style="max-height: 300px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Diagnostic Details & Calculations -->
+    <div class="col-lg-5 mb-4">
+        <div class="card card-custom">
+            <div class="card-header card-header-custom">
+                <i class="bi bi-clipboard-pulse me-2"></i>AI Diagnostic Metrics
+            </div>
+            <div class="card-body">
+                <!-- Keros Badge & Risk Indicators -->
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <div>
+                        <span class="text-secondary small d-block">Keros Classification</span>
+                        <h4 class="mb-0 text-primary">{{ analysis.keros_type }}</h4>
+                    </div>
+                    <span class="badge fs-6 rounded-pill {% if analysis.keros_type == 'Keros Type I' %}badge-keros-1{% elif analysis.keros_type == 'Keros Type II' %}badge-keros-2{% else %}badge-keros-3{% endif %}">
+                        Conf: {{ analysis.confidence_score }}%
+                    </span>
+                </div>
+
+                <hr>
+
+                <!-- Depths Table -->
+                <table class="table table-bordered table-sm my-3">
+                    <thead class="bg-light">
+                        <tr>
+                            <th>Parameter</th>
+                            <th class="text-end">Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Left Olfactory Fossa Depth</td>
+                            <td class="text-end font-weight-bold"><code>{{ analysis.left_depth }} mm</code></td>
+                        </tr>
+                        <tr>
+                            <td>Right Olfactory Fossa Depth</td>
+                            <td class="text-end font-weight-bold"><code>{{ analysis.right_depth }} mm</code></td>
+                        </tr>
+                        <tr class="table-active">
+                            <td>Average Depth</td>
+                            <td class="text-end font-weight-bold text-primary"><code>{{ analysis.average_depth }} mm</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <hr>
+
+                <!-- Risk Level Notification -->
+                <div class="alert {% if analysis.risk_level == 'Low Risk' %}alert-success{% elif analysis.risk_level == 'Moderate Risk' %}alert-warning{% else %}alert-danger{% endif %} border-0 shadow-sm p-3">
+                    <div class="d-flex align-items-center">
+                        <i class="bi {% if analysis.risk_level == 'Low Risk' %}bi-shield-check{% elif analysis.risk_level == 'Moderate Risk' %}bi-exclamation-triangle{% else %}bi-exclamation-octagon{% endif %} fs-3 me-3"></i>
+                        <div>
+                            <h6 class="alert-heading mb-0 font-weight-bold">Surgical Risk: {{ analysis.risk_level }}</h6>
+                        </div>
+                    </div>
+                    <p class="mt-2 mb-0 small">{{ explanation }}</p>
+                </div>
+
+                <!-- Action Button Matrix -->
+                <div class="row g-2 mt-3">
+                    <div class="col-6">
+                        <a href="{{ url_for('analysis.download_report', id=analysis.id) }}" class="btn btn-sm btn-primary w-100 py-2"><i class="bi bi-file-earmark-pdf me-2"></i>Download PDF</a>
+                    </div>
+                    <div class="col-6">
+                        <button onclick="window.print()" class="btn btn-sm btn-outline-secondary w-100 py-2"><i class="bi bi-printer me-2"></i>Print Screen</button>
+                    </div>
+                    <div class="col-12 mt-2">
+                        <a href="{{ url_for('analysis.upload') }}" class="btn btn-sm btn-light text-primary w-100 py-2 border"><i class="bi bi-arrow-repeat me-2"></i>Process Another Image</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

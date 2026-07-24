@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | Olfactory Fossa Depth AI{% endblock %}
+{% block header_title %}Clinical Dashboard{% endblock %}
+
+{% block content %}
+<!-- Welcome Banner -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="p-4 bg-white rounded shadow-sm border d-flex align-items-center justify-content-between">
+            <div>
+                <h4 class="mb-1 text-primary">Welcome, Dr. {{ current_user.full_name }}</h4>
+                <p class="text-secondary mb-0">Olfactory Fossa depth measurements and risk profiling system dashboard.</p>
+            </div>
+            <a href="{{ url_for('analysis.upload') }}" class="btn btn-primary"><i class="bi bi-plus-circle-fill me-2"></i>New Scan Analysis</a>
+        </div>
+    </div>
+</div>
+
+<!-- Metrics Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card card-custom stat-card p-3">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <h6 class="text-secondary mb-1">Total Patients</h6>
+                    <h3 class="mb-0 text-primary">{{ total_patients }}</h3>
+                </div>
+                <div class="bg-light p-2 rounded text-primary fs-3"><i class="bi bi-people"></i></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card card-custom stat-card secondary p-3">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <h6 class="text-secondary mb-1">Total Scans Run</h6>
+                    <h3 class="mb-0 text-primary">{{ total_analyses }}</h3>
+                </div>
+                <div class="bg-light p-2 rounded text-info fs-3"><i class="bi bi-activity"></i></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card card-custom stat-card warning p-3">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <h6 class="text-secondary mb-1">Keros Type II Scans</h6>
+                    <h3 class="mb-0 text-warning">{{ keros_stats['Type II'] }}</h3>
+                </div>
+                <div class="bg-light p-2 rounded text-warning fs-3"><i class="bi bi-bezier2"></i></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card card-custom stat-card danger p-3">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <h6 class="text-secondary mb-1">Keros Type III (High Risk)</h6>
+                    <h3 class="mb-0 text-danger">{{ keros_stats['Type III'] }}</h3>
+                </div>
+                <div class="bg-light p-2 rounded text-danger fs-3"><i class="bi bi-exclamation-triangle-fill"></i></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Patient Search & List -->
+    <div class="col-lg-7">
+        <div class="card card-custom">
+            <div class="card-header card-header-custom d-flex align-items-center justify-content-between">
+                <span><i class="bi bi-search me-2"></i>Patient Search Registry</span>
+                <form class="d-flex" action="{{ url_for('dashboard.index') }}" method="GET">
+                    <input class="form-control form-control-sm me-2" type="search" name="search" placeholder="Search Patients..." value="{{ search_query }}">
+                    <button class="btn btn-sm btn-outline-primary" type="submit">Search</button>
+                </form>
+            </div>
+            <div class="card-body">
+                {% if patients_list %}
+                <div class="table-responsive">
+                    <table class="table table-hover table-custom mb-0">
+                        <thead>
+                            <tr>
+                                <th>Patient ID</th>
+                                <th>Name</th>
+                                <th>Age/Gender</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for patient in patients_list %}
+                            <tr>
+                                <td><code>{{ patient.patient_uuid }}</code></td>
+                                <td>{{ patient.name }}</td>
+                                <td>{{ patient.age }} yrs / {{ patient.gender }}</td>
+                                <td>
+                                    <a href="{{ url_for('patient.view_patient', id=patient.id) }}" class="btn btn-sm btn-light text-primary"><i class="bi bi-eye"></i> View Profile</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="bi bi-emoji-neutral text-muted fs-2"></i>
+                    <p class="text-secondary mt-2">No patients found. Create one to run a scan.</p>
+                    <a href="{{ url_for('patient.list_patients') }}" class="btn btn-sm btn-primary">Create Patient profile</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recent Scans / Uploads -->
+    <div class="col-lg-5">
+        <div class="card card-custom">
+            <div class="card-header card-header-custom">
+                <i class="bi bi-clock-history me-2"></i>Recent Scans
+            </div>
+            <div class="card-body">
+                {% if recent_analyses %}
+                <ul class="list-group list-group-flush">
+                    {% for analysis in recent_analyses %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                        <div>
+                            <h6 class="mb-1"><a href="{{ url_for('analysis.view_analysis', id=analysis.id) }}" class="text-decoration-none text-primary">{{ analysis.patient.name }}</a></h6>
+                            <small class="text-secondary">{{ analysis.date_created.strftime("%Y-%m-%d %H:%M") }}</small>
+                        </div>
+                        <span class="badge rounded-pill {% if analysis.keros_type == 'Keros Type I' %}badge-keros-1{% elif analysis.keros_type == 'Keros Type II' %}badge-keros-2{% else %}badge-keros-3{% endif %}">
+                            {{ analysis.keros_type }}
+                        </span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <div class="text-center py-4 text-secondary">
+                    <i class="bi bi-activity fs-2 text-muted"></i>
+                    <p class="mt-2 mb-0">No scans executed yet.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

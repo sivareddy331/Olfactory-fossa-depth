@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Report Archive | Olfactory Fossa Depth AI{% endblock %}
+{% block header_title %}Report Archive Registry{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card card-custom">
+            <div class="card-header card-header-custom d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-file-earmark-pdf-fill me-2"></i>Generated Clinical PDF Reports</span>
+            </div>
+            <div class="card-body">
+                {% if reports_list %}
+                <div class="table-responsive">
+                    <table class="table table-hover table-custom mb-0">
+                        <thead>
+                            <tr>
+                                <th>Scan Timestamp</th>
+                                <th>Patient ID</th>
+                                <th>Patient Name</th>
+                                <th>Measured Average Depth</th>
+                                <th>Keros Type</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for report in reports_list %}
+                            <tr>
+                                <td>{{ report.date_created.strftime("%Y-%m-%d %H:%M") }}</td>
+                                <td><code>{{ report.patient.patient_uuid }}</code></td>
+                                <td>{{ report.patient.name }}</td>
+                                <td><code>{{ report.average_depth }} mm</code></td>
+                                <td>
+                                    <span class="badge {% if report.keros_type == 'Keros Type I' %}badge-keros-1{% elif report.keros_type == 'Keros Type II' %}badge-keros-2{% else %}badge-keros-3{% endif %}">
+                                        {{ report.keros_type }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('analysis.download_report', id=report.id) }}" class="btn btn-sm btn-outline-primary"><i class="bi bi-download me-1"></i>Download PDF</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5 text-secondary">
+                    <i class="bi bi-file-earmark-pdf fs-1 text-muted"></i>
+                    <p class="mt-2">No clinical reports found. Upload a scan and perform an analysis to generate a report.</p>
+                    <a href="{{ url_for('analysis.upload') }}" class="btn btn-sm btn-primary">Process New Scan</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

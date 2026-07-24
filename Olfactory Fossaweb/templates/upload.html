@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Upload CT Scan | Olfactory Fossa Depth AI{% endblock %}
+{% block header_title %}Run Fossa Depth Scan Analysis{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-6 mx-auto">
+        <div class="card card-custom">
+            <div class="card-header card-header-custom">
+                <i class="bi bi-cloud-arrow-up-fill me-2"></i>Upload Coronal CT Image
+            </div>
+            <div class="card-body p-4">
+                <form id="analysis_form" action="{{ url_for('analysis.upload') }}" method="POST" enctype="multipart/form-data">
+                    <!-- Patient Select -->
+                    <div class="mb-4">
+                        <label for="patient_id" class="form-label font-weight-bold">Select Target Patient</label>
+                        <select class="form-select" id="patient_id" name="patient_id" required>
+                            <option value="" disabled selected>-- Select Patient Profile --</option>
+                            {% for p in patients %}
+                                <option value="{{ p.id }}" {% if request.args.get('patient_id')|int == p.id %}selected{% endif %}>
+                                    {{ p.name }} (ID: {{ p.patient_uuid }})
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <div class="form-text">If the patient is not listed, register them in the <a href="{{ url_for('patient.list_patients') }}" class="text-decoration-none">Patients Directory</a> first.</div>
+                    </div>
+                    
+                    <!-- File Input Drag/Drop Zone -->
+                    <div class="mb-4">
+                        <label class="form-label font-weight-bold">Coronal CT Scan Image</label>
+                        <div class="upload-dropzone" onclick="document.getElementById('scan_file').click()">
+                            <input type="file" id="scan_file" name="scan_file" accept=".png, .jpg, .jpeg" class="d-none" required>
+                            <div id="upload_label">
+                                <i class="bi bi-images text-primary fs-1 mb-2"></i>
+                                <p class="mb-1 text-dark">Click or drag a scan image to upload</p>
+                                <span class="text-secondary small">Supports PNG, JPG, or JPEG formats</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Image Preview -->
+                    <div id="preview_container" class="mb-4 d-none text-center">
+                        <label class="form-label d-block text-start font-weight-bold">Selected Image Preview</label>
+                        <div class="preview-container border rounded bg-light p-2 d-inline-block">
+                            <img id="image_preview" src="" alt="Scan Preview" class="img-fluid">
+                        </div>
+                    </div>
+                    
+                    <!-- Submit button -->
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg"><i class="bi bi-cpu-fill me-2"></i>Execute AI Diagnostic Pipeline</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

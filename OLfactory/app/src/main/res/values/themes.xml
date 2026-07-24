@@ -1,0 +1,48 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.OLFactory" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/cyber_blue_accent</item>
+        <item name="colorPrimaryVariant">@color/cyber_blue_glow</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/cyber_card_bg</item>
+        <item name="android:windowBackground">@color/cyber_dark_bg</item>
+        <item name="android:statusBarColor">@color/cyber_dark_bg</item>
+        <item name="android:navigationBarColor">@color/cyber_dark_bg</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o">true</item>
+    </style>
+
+    <style name="Theme.OLFactory" parent="Base.Theme.OLFactory" />
+
+    <!-- Custom Button Style - Fixed to MaterialComponents -->
+    <style name="PremiumButton" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/cyber_blue_accent</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="cornerRadius">14dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="elevation">4dp</item>
+    </style>
+
+    <!-- Secondary Button Style - Fixed to MaterialComponents -->
+    <style name="SecondaryButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="strokeColor">@color/cyber_blue_accent</item>
+        <item name="android:textColor">@color/cyber_blue_accent</item>
+        <item name="backgroundTint">@color/white</item>
+        <item name="cornerRadius">14dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="strokeWidth">1.5dp</item>
+        <item name="rippleColor">@color/cyber_blue_glow</item>
+    </style>
+
+    <!-- Theme for SearchView to ensure text and hint are dark slate -->
+    <style name="SearchViewTheme" parent="Widget.AppCompat.SearchView">
+        <item name="android:editTextColor">@color/cyber_text_primary</item>
+        <item name="android:textColorHint">@color/cyber_text_secondary</item>
+        <item name="android:textColor">@color/cyber_text_primary</item>
+    </style>
+</resources>

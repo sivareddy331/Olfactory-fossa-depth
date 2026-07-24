@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+
+{% block title %}Patient Directory | Olfactory Fossa Depth AI{% endblock %}
+{% block header_title %}Patient Registry{% endblock %}
+
+{% block content %}
+<div class="row">
+    {% if active_patient %}
+    <!-- Detailed Patient Profile and History -->
+    <div class="col-md-4">
+        <!-- Patient Details Card -->
+        <div class="card card-custom">
+            <div class="card-header card-header-custom d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-person-vcard me-2"></i>Patient Profile</span>
+                <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editPatientModal"><i class="bi bi-pencil"></i></button>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-3">
+                    <i class="bi bi-person-fill text-secondary fs-1"></i>
+                    <h5 class="mt-2">{{ active_patient.first_name }} {{ active_patient.last_name }}</h5>
+                    <span class="badge bg-light text-secondary"><code>{{ active_patient.patient_uuid }}</code></span>
+                </div>
+                <hr>
+                <div class="row g-2 small">
+                    <div class="col-6 text-secondary">Age:</div>
+                    <div class="col-6 font-weight-bold">{{ active_patient.age }} Years</div>
+                    <div class="col-6 text-secondary">Gender:</div>
+                    <div class="col-6">{{ active_patient.gender }}</div>
+                    <div class="col-6 text-secondary">Registered:</div>
+                    <div class="col-6">{{ active_patient.date_created.strftime("%Y-%m-%d") }}</div>
+                </div>
+                <hr>
+                <h6 class="text-secondary small">Clinical Notes:</h6>
+                <p class="small text-dark">{{ active_patient.clinical_notes or "No notes provided." }}</p>
+                
+                <div class="d-grid mt-4">
+                    <form action="{{ url_for('patient.delete_patient', id=active_patient.id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this patient profile and all associated scan history?');">
+                        <button type="submit" class="btn btn-sm btn-outline-danger w-100"><i class="bi bi-trash me-2"></i>Delete Profile</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <!-- History Card -->
+        <div class="card card-custom">
+            <div class="card-header card-header-custom d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-clock-history me-2"></i>Scan Analysis History</span>
+                <a href="{{ url_for('analysis.upload') }}?patient_id={{ active_patient.id }}" class="btn btn-sm btn-primary"><i class="bi bi-plus-circle me-1"></i>Run New Scan</a>
+            </div>
+            <div class="card-body">
+                {% if analyses %}
+                <div class="table-responsive">
+                    <table class="table table-hover table-custom mb-0">
+                        <thead>
+                            <tr>
+                                <th>Scan Date</th>
+                                <th>Left Depth</th>
+                                <th>Right Depth</th>
+                                <th>Keros Type</th>
+                                <th>Risk Level</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for analysis in analyses %}
+                            <tr>
+                                <td>{{ analysis.date_created.strftime("%Y-%m-%d %H:%M") }}</td>
+                                <td>{{ analysis.left_depth }} mm</td>
+                                <td>{{ analysis.right_depth }} mm</td>
+                                <td>
+                                    <span class="badge {% if analysis.keros_type == 'Keros Type I' %}badge-keros-1{% elif analysis.keros_type == 'Keros Type II' %}badge-keros-2{% else %}badge-keros-3{% endif %}">
+                                        {{ analysis.keros_type }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="text-{% if analysis.risk_level == 'Low Risk' %}success{% elif analysis.risk_level == 'Moderate Risk' %}warning{% else %}danger{% endif %} font-weight-bold small">
+                                        {{ analysis.risk_level }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a href="{{ url_for('analysis.view_analysis', id=analysis.id) }}" class="btn btn-sm btn-light text-primary"><i class="bi bi-eye"></i> View</a>
+                                        <a href="{{ url_for('analysis.download_report', id=analysis.id) }}" class="btn btn-sm btn-light text-info"><i class="bi bi-file-pdf"></i> PDF</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="bi bi-activity text-secondary fs-1"></i>
+                    <p class="text-secondary mt-2">No CT scan reports found for this patient.</p>
+                    <a href="{{ url_for('analysis.upload') }}?patient_id={{ active_patient.id }}" class="btn btn-sm btn-primary">Process First Scan</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Patient Modal -->
+    <div class="modal fade" id="editPatientModal" tabindex="-1" aria-labelledby="editPatientModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="{{ url_for('patient.edit_patient', id=active_patient.id) }}" method="POST">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editPatientModalLabel">Edit Patient Profile</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="first_name" class="form-label">First Name</label>
+                            <input type="text" class="form-control" name="first_name" value="{{ active_patient.first_name }}" required placeholder="First Name">
+                            <label for="last_name" class="form-label mt-2">Last Name</label>
+                            <input type="text" class="form-control" name="last_name" value="{{ active_patient.last_name }}" required placeholder="Last Name">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="age" class="form-label">Age</label>
+                                <input type="number" class="form-control" name="age" value="{{ active_patient.age }}" required min="1">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="gender" class="form-label">Gender</label>
+                                <select class="form-select" name="gender" required>
+                                    <option value="Male" {% if active_patient.gender == 'Male' %}selected{% endif %}>Male</option>
+                                    <option value="Female" {% if active_patient.gender == 'Female' %}selected{% endif %}>Female</option>
+                                    <option value="Other" {% if active_patient.gender == 'Other' %}selected{% endif %}>Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="clinical_notes" class="form-label">Clinical History & Notes</label>
+                            <textarea class="form-control" name="clinical_notes" rows="4">{{ active_patient.clinical_notes }}</textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    {% else %}
+    <!-- Directory view of all Patients -->
+    <div class="col-12">
+        <div class="card card-custom">
+            <div class="card-header card-header-custom d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-people-fill me-2"></i>Patient Registry Directory</span>
+                <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addPatientModal"><i class="bi bi-plus-circle me-1"></i>Add Patient</button>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <form action="{{ url_for('patient.list_patients') }}" method="GET" class="d-flex">
+                            <input type="text" name="search" class="form-control form-control-sm me-2" placeholder="Search by name or ID..." value="{{ search_query }}">
+                            <button type="submit" class="btn btn-sm btn-outline-primary">Search</button>
+                        </form>
+                    </div>
+                </div>
+                
+                {% if patients %}
+                <div class="table-responsive">
+                    <table class="table table-hover table-custom">
+                        <thead>
+                            <tr>
+                                <th>Patient ID</th>
+                                <th>Full Name</th>
+                                <th>Age</th>
+                                <th>Gender</th>
+                                <th>Registered Date</th>
+                                <th>Clinical Notes</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for p in patients %}
+                            <tr>
+                                <td><code>{{ p.patient_uuid }}</code></td>
+                                <td>{{ p.first_name }} {{ p.last_name }}</td>
+                                <td>{{ p.age }} Years</td>
+                                <td>{{ p.gender }}</td>
+                                <td>{{ p.date_created.strftime("%Y-%m-%d") }}</td>
+                                <td><span class="text-truncate d-inline-block" style="max-width: 200px;">{{ p.clinical_notes or "-" }}</span></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a href="{{ url_for('patient.view_patient', id=p.id) }}" class="btn btn-sm btn-light text-primary"><i class="bi bi-eye"></i> View Profile</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5 text-secondary">
+                    <i class="bi bi-people fs-1 text-muted"></i>
+                    <p class="mt-2">No patients found in your registry.</p>
+                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addPatientModal">Add First Patient</button>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Patient Modal -->
+    <div class="modal fade" id="addPatientModal" tabindex="-1" aria-labelledby="addPatientModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="{{ url_for('patient.add_patient') }}" method="POST">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addPatientModalLabel">Create Patient Profile</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="first_name" class="form-label">First Name</label>
+                            <input type="text" class="form-control" name="first_name" required placeholder="First Name">
+                            <label for="last_name" class="form-label mt-2">Last Name</label>
+                            <input type="text" class="form-control" name="last_name" required placeholder="Last Name">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="age" class="form-label">Age</label>
+                                <input type="number" class="form-control" name="age" required min="1" placeholder="42">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="gender" class="form-label">Gender</label>
+                                <select class="form-select" name="gender" required>
+                                    <option value="" disabled selected>Select</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="clinical_notes" class="form-label">Clinical History & Notes</label>
+                            <textarea class="form-control" name="clinical_notes" rows="4" placeholder="Prior surgeries, septum deviations, diagnostic indicators..."></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Create Profile</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

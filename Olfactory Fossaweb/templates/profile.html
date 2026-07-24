@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}User Profile | Olfactory Fossa Depth AI{% endblock %}
+{% block header_title %}User Profile Settings{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 col-lg-5 mx-auto">
+        <div class="card card-custom">
+            <div class="card-header card-header-custom">
+                <i class="bi bi-person-fill-gear me-2"></i>Edit Profile
+            </div>
+            <div class="card-body p-4">
+                <form action="{{ url_for('auth.profile') }}" method="POST">
+                    <div class="mb-3">
+                        <label for="full_name" class="form-label">Doctor's Full Name</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
+                            <input type="text" class="form-control" id="full_name" name="full_name" value="{{ current_user.full_name }}" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username (Read-Only)</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light text-muted"><i class="bi bi-lock-fill"></i></span>
+                            <input type="text" class="form-control bg-light text-muted" id="username" value="{{ current_user.username }}" readonly>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email Address</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ current_user.email }}" required>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label for="password" class="form-label">New Password (Leave blank to keep current)</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-key"></i></span>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="••••••••">
+                        </div>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-save me-2"></i>Save Configuration</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

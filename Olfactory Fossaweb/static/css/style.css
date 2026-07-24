@@ -1,0 +1,223 @@
+:root {
+    --primary-color: #1e3d59;
+    --primary-hover: #17b978;
+    --secondary-color: #17a2b8;
+    --light-bg: #f8f9fa;
+    --dark-text: #333333;
+    --sidebar-width: 260px;
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    --border-color: #e3e6f0;
+}
+
+body {
+    background-color: #f3f5f9;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--dark-text);
+    overflow-x: hidden;
+}
+
+/* Auth Layout */
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1e3d59 0%, #17a2b8 100%);
+}
+
+.auth-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    background-color: #ffffff;
+    max-width: 420px;
+    width: 100%;
+}
+
+.auth-header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 30px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    text-align: center;
+}
+
+/* App Layout */
+.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}
+
+#sidebar {
+    min-width: var(--sidebar-width);
+    max-width: var(--sidebar-width);
+    background: var(--primary-color);
+    color: #fff;
+    transition: all 0.3s;
+    min-height: 100vh;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+}
+
+#sidebar .sidebar-header {
+    padding: 20px;
+    background: #122538;
+    font-weight: 700;
+    font-size: 1.2rem;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+#sidebar ul.components {
+    padding: 20px 0;
+}
+
+#sidebar ul li a {
+    padding: 12px 20px;
+    font-size: 0.95rem;
+    display: block;
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    transition: all 0.2s;
+    border-left: 4px solid transparent;
+}
+
+#sidebar ul li a:hover, #sidebar ul li.active > a {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    border-left: 4px solid var(--secondary-color);
+}
+
+#sidebar ul li a i {
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+}
+
+#content {
+    width: 100%;
+    padding: 20px 30px;
+    min-height: 100vh;
+    transition: all 0.3s;
+}
+
+/* Navbar */
+.navbar-custom {
+    background-color: #ffffff;
+    box-shadow: var(--card-shadow);
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+}
+
+/* Cards & Stats */
+.card-custom {
+    background-color: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 25px;
+}
+
+.card-header-custom {
+    background-color: #ffffff;
+    border-bottom: 1px solid var(--border-color);
+    padding: 15px 20px;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.stat-card {
+    border-left: 4px solid var(--primary-color);
+}
+
+.stat-card.secondary {
+    border-left: 4px solid var(--secondary-color);
+}
+
+.stat-card.warning {
+    border-left: 4px solid #ffc107;
+}
+
+.stat-card.danger {
+    border-left: 4px solid #dc3545;
+}
+
+/* Tables */
+.table-custom th {
+    background-color: #f8f9fa;
+    color: var(--primary-color);
+    font-weight: 600;
+    border-bottom-width: 1px;
+}
+
+.table-custom td {
+    vertical-align: middle;
+}
+
+/* File Upload */
+.upload-dropzone {
+    border: 2px dashed #b8c9d9;
+    background-color: #f8fbfd;
+    padding: 40px;
+    text-align: center;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.upload-dropzone:hover {
+    border-color: var(--secondary-color);
+    background-color: #f0f8fa;
+}
+
+.preview-container img {
+    max-height: 350px;
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+}
+
+/* Analysis Loader */
+.analysis-loader {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.85);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.loader-spinner {
+    width: 3rem;
+    height: 3rem;
+    color: var(--secondary-color);
+}
+
+.loading-text {
+    margin-top: 15px;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* Badges */
+.badge-keros-1 {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.badge-keros-2 {
+    background-color: #fff3cd;
+    color: #664d03;
+}
+
+.badge-keros-3 {
+    background-color: #f8d7da;
+    color: #842029;
+}
