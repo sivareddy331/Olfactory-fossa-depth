@@ -337,24 +337,6 @@ def generate_realistic_dataset():
         # Determine failure and skip indexes to create a realistic run
         fail_indices = []
         skip_indices = []
-        if config['id'] == 'selenium-web':
-            fail_indices = [43, 115]
-            skip_indices = [201]
-        elif config['id'] == 'appium-android':
-            fail_indices = [59, 129]
-            skip_indices = [268, 278]
-        elif config['id'] == 'unit-test':
-            fail_indices = [82]
-            skip_indices = [197]
-        elif config['id'] == 'validation-test':
-            fail_indices = [37]
-            skip_indices = [148]
-        elif config['id'] == 'deployment-test':
-            fail_indices = [10]
-            skip_indices = [212]
-        elif config['id'] == 'load-test':
-            fail_indices = [150]
-            skip_indices = [280]
 
         for i in range(1, 301):
             base_case = config['base_list'][(i - 1) % base_len]
