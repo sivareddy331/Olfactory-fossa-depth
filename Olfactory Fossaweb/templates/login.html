@@ -42,12 +42,12 @@
         </form>
         {% else %}
         <!-- Standard Login Form -->
-        <form action="{{ url_for('auth.login') }}" method="POST">
+        <form action="{{ url_for('auth.login') }}" method="POST" novalidate>
             <div class="mb-3">
-                <label for="username" class="form-label small">Username</label>
+                <label for="email" class="form-label small">Email Address</label>
                 <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
-                    <input type="text" class="form-placeholder form-control" id="username" name="username" required placeholder="doctor_user">
+                    <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                    <input type="email" class="form-placeholder form-control" id="email" name="email" required placeholder="doctor@hospital.com">
                 </div>
             </div>
             <div class="mb-3">

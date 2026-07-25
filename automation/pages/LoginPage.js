@@ -4,7 +4,7 @@ const { waitForVisible, typeInField, clickElement, navigateTo, waitForUrl, getFl
 class LoginPage {
   constructor(driver) {
     this.driver = driver;
-    this.usernameInput = By.css('input[name="username"], input#username');
+    this.usernameInput = By.css('input[name="username"], input#username, input[name="email"], input#email');
     this.passwordInput = By.css('input[name="password"], input#password');
     this.loginButton = By.css('button[type="submit"], input[type="submit"]');
     this.forgotPasswordLink = By.css('a[href*="forgot"], a[href*="reset"]');

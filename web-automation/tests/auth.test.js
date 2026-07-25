@@ -5,7 +5,7 @@ describe('Authentication Module', () => {
         await LoginPage.open();
         await LoginPage.login('invalid@example.com', 'SuperSecretPassword!');
         await expect(LoginPage.alertMessage).toBeExisting();
-        await expect(LoginPage.alertMessage).toHaveTextContaining('Invalid username or password');
+        await expect(LoginPage.alertMessage).toHaveTextContaining('Invalid email or password');
     });
 
     // We leave actual valid login commented out or mocked to prevent locking out real accounts

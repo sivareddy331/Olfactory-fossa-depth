@@ -124,7 +124,7 @@ describe('Suite 1: Authentication – Login, Register, Forgot Password', functio
       expectedResult: 'Both username and password input fields are visible'
     }, async () => {
       await loginPage.navigate();
-      const usernameVisible = await isElementPresent(driver, By.css('input[name="username"]'));
+      const usernameVisible = await isElementPresent(driver, By.css('input[name="username"], input[name="email"]'));
       const passwordVisible = await isElementPresent(driver, By.css('input[name="password"]'));
       expect(usernameVisible).to.be.true;
       expect(passwordVisible).to.be.true;

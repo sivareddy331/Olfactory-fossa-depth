@@ -23,16 +23,16 @@ def login():
         return redirect(url_for('dashboard.index'))
     
     if request.method == 'POST':
-        username = request.form.get('username')
+        email = request.form.get('email', '').strip().lower()
         password = request.form.get('password')
         
-        user = User.query.filter_by(username=username).first()
+        user = User.query.filter((User.email == email) | (User.username == email)).first()
         if user and check_password_hash(user.hashed_password, password):
             login_user(user)
             flash('Logged in successfully.', 'success')
             return redirect(url_for('dashboard.index'))
         else:
-            flash('Invalid username or password.', 'danger')
+            flash('Invalid email or password.', 'danger')
             
     return render_template('login.html')
 
